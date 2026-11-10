@@ -4734,6 +4734,153 @@ mod tests {
     }
 
     #[test]
+    fn block_edit_changes_dialog_is_answerable_through_the_automation_bridge() {
+        use crate::app::ModalKind;
+        use document::entities::{Insert, Line};
+        use document::types::Vector3;
+        use document::EntityType;
+
+        let mut app = OpenCADStudio::new_for_test();
+        assert_eq!(request(&mut app, json!({"op":"new"}))["ok"], true);
+        let i = app.active_tab;
+        app.tabs[i].scene.define_block_raw(
+            "EDIT_ME",
+            Vector3::ZERO,
+            vec![EntityType::Line(Line::from_points(
+                Vector3::ZERO,
+                Vector3::UNIT_X,
+            ))],
+        );
+        let reference = app.tabs[i]
+            .scene
+            .document
+            .add_entity(EntityType::Insert(Insert::new("EDIT_ME", Vector3::ZERO)))
+            .unwrap();
+        app.tabs[i].dirty = false;
+
+        let _ = app.dispatch_command(&format!("BEDIT_BEGIN:{}", reference.value()));
+        assert!(app.tabs[i].active_block_edit.is_some());
+        let drawn = request(&mut app, json!({"op":"run","cmd":"LINE 0,0 5,0"}));
+        assert_eq!(drawn["ok"], true, "{drawn}");
+
+        let _ = app.dispatch_command("BCLOSE");
+        assert_eq!(app.active_modal, Some(ModalKind::BlockEditChanges));
+        let cancelled = request(&mut app, json!({"op":"action","name":"dialog_cancel"}));
+        assert_eq!(cancelled["ok"], true, "{cancelled}");
+        assert!(app.tabs[i].active_block_edit.is_some());
+
+        let _ = app.dispatch_command("BCLOSE");
+        assert_eq!(app.active_modal, Some(ModalKind::BlockEditChanges));
+        let discarded = request(&mut app, json!({"op":"action","name":"dialog_discard"}));
+        assert_eq!(discarded["ok"], true, "{discarded}");
+        assert!(app.tabs[i].active_block_edit.is_none());
+
+        let _ = app.dispatch_command(&format!("BEDIT_BEGIN:{}", reference.value()));
+        assert!(app.tabs[i].active_block_edit.is_some());
+        let drawn = request(&mut app, json!({"op":"run","cmd":"LINE 5,0 10,0"}));
+        assert_eq!(drawn["ok"], true, "{drawn}");
+
+        let _ = app.dispatch_command("BCLOSE");
+        assert_eq!(app.active_modal, Some(ModalKind::BlockEditChanges));
+        let saved = request(&mut app, json!({"op":"action","name":"dialog_ok"}));
+        assert_ne!(saved["code"], "no_dialog", "{saved}");
+        assert!(app.tabs[i].active_block_edit.is_none());
+    }
+
+    #[test]
+    fn write_block_dialog_is_answerable_through_the_automation_bridge() {
+        use crate::app::ModalKind;
+        use document::entities::Line;
+        use document::types::Vector3;
+        use document::EntityType;
+
+        let mut app = OpenCADStudio::new_for_test();
+        assert_eq!(request(&mut app, json!({"op":"new"}))["ok"], true);
+        let i = app.active_tab;
+        app.tabs[i]
+            .scene
+            .document
+            .add_entity(EntityType::Line(Line::from_points(
+                Vector3::ZERO,
+                Vector3::UNIT_X,
+            )))
+            .unwrap();
+
+        let temp = std::env::temp_dir().join(format!("ocs-wblock-{}.dwg", session_id()));
+        let _ = std::fs::remove_file(&temp);
+        let drawn = request(&mut app, json!({"op":"run","cmd":"SELECTALL"}));
+        assert_eq!(drawn["ok"], true, "{drawn}");
+        let opened = request(&mut app, json!({"op":"run","cmd":"WBLOCK"}));
+        assert_ne!(opened["code"], "bad_request", "{opened}");
+        assert_eq!(app.active_modal, Some(ModalKind::WriteBlock));
+        for value in [
+            "source=objects",
+            "object_mode=delete",
+            &format!("file={}", temp.to_string_lossy()),
+            "unit=6",
+        ] {
+            let reply = request(
+                &mut app,
+                json!({"op":"action","name":"wblock_dialog","value":value}),
+            );
+            assert_eq!(reply["ok"], true, "{value}: {reply}");
+        }
+        let applied = request(&mut app, json!({"op":"action","name":"dialog_ok"}));
+        assert_ne!(applied["code"], "no_dialog", "{applied}");
+        assert!(temp.is_file(), "WBLOCK wrote {}", temp.display());
+        let _ = std::fs::remove_file(&temp);
+        assert_ne!(app.active_modal, Some(ModalKind::WriteBlock));
+    }
+
+    #[test]
+    fn block_definition_dialog_fields_are_automatable() {
+        use crate::app::ModalKind;
+        let mut app = OpenCADStudio::new_for_test();
+        assert_eq!(request(&mut app, json!({"op":"new"}))["status"], "completed");
+        let drawn = request(&mut app, json!({"op":"run","cmd":"LINE 0,0 10,0"}));
+        assert_eq!(drawn["ok"], true, "{drawn}");
+        let selected = request(&mut app, json!({"op":"run","cmd":"SELECTALL"}));
+        assert_eq!(selected["ok"], true, "{selected}");
+        let opened = request(&mut app, json!({"op":"run","cmd":"BLOCK"}));
+        assert_ne!(opened["code"], "bad_request", "{opened}");
+        assert_eq!(app.active_modal, Some(ModalKind::BlockDefinition));
+        for value in [
+            "name=ROBOT_BA_5",
+            "mode=delete",
+            "annotative=1",
+            "scale_uniformly=1",
+            "allow_exploding=0",
+            "match_orientation=1",
+            "unit=4",
+            "description=A welded part",
+        ] {
+            let reply = request(
+                &mut app,
+                json!({"op":"action","name":"block_def_dialog","value":value}),
+            );
+            assert_eq!(reply["ok"], true, "{value}: {reply}");
+        }
+        let applied = request(&mut app, json!({"op":"action","name":"dialog_ok"}));
+        assert_ne!(applied["code"], "no_dialog", "{applied}");
+        assert_ne!(app.active_modal, Some(ModalKind::BlockDefinition));
+        let record = app.tabs[app.active_tab]
+            .scene
+            .document
+            .block_records
+            .get("ROBOT_BA_5")
+            .cloned();
+        let record = record.expect("the definition was created through the bridge");
+        assert_eq!(record.units, 4, "the unit was applied");
+        assert_eq!(record.explodable, false, "allow_exploding=0 was applied");
+        assert_eq!(record.scale_uniformly, true, "scale_uniformly was applied");
+        assert!(
+            record.description.contains("welded part"),
+            "description was applied: {}",
+            record.description
+        );
+    }
+
+    #[test]
     fn pending_request_id_reuse_rejects_changed_payload() {
         let mut app = OpenCADStudio::new_for_test();
         app.main_window = Some(iced::window::Id::unique());

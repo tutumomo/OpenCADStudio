@@ -147,6 +147,37 @@ fn the_expression_cell_edits_the_same_number_as_the_value_cell() {
 }
 
 #[test]
+fn a_parameter_name_is_not_an_expression_and_the_used_filter_lists_nothing() {
+    let (mut app, tab, definition) = open(&["BPARAMETER POLAR 0,0 10,0 5,2"], &[]);
+    let before = manager::rows(&app.tabs[tab].scene.document, definition);
+    answer(&mut app, "Angle1", Cell::Expression, "Distance1");
+    assert_eq!(
+        app.command_line.last_error.as_deref(),
+        Some("Specify a finite numeric parameter value."),
+        "another row's name is not a variable an expression cell can use"
+    );
+    assert_eq!(
+        manager::rows(&app.tabs[tab].scene.document, definition),
+        before,
+        "nothing a name types reaches the definition"
+    );
+    let listed = manager::displayed(&before, manager::FilterMode::UsedInExpressions, "*", "");
+    assert!(
+        listed.is_empty(),
+        "with every expression a literal, the used-in-expressions filter keeps no row"
+    );
+    assert_eq!(
+        manager::footer(
+            manager::FilterMode::UsedInExpressions,
+            before.len(),
+            listed.len()
+        ),
+        "All Used in Expressions: 0 of 2 parameters displayed"
+    );
+    let _ = app.dispatch_command("BEDIT_DISCARD");
+}
+
+#[test]
 fn an_angle_is_typed_in_degrees_and_leaves_the_distance_alone() {
     let (mut app, tab, definition) = open(&["BPARAMETER POLAR 0,0 10,0 5,2"], &[]);
     answer(&mut app, "Angle1", Cell::Value, "90");
@@ -1557,6 +1588,10 @@ fn the_header_menu_opens_and_an_entry_toggles_its_column_and_closes_the_menu() {
         !app.tabs[tab].parameters_panel.header_menu,
         "the menu starts closed"
     );
+    assert!(
+        !app.tabs[tab].parameters_panel.columns[Column::Type.index()],
+        "Type starts hidden, as the recorded menu leaves it"
+    );
     let _ = app.update(Message::ParametersManagerHeaderMenu);
     assert!(
         app.tabs[tab].parameters_panel.header_menu,
@@ -1564,8 +1599,8 @@ fn the_header_menu_opens_and_an_entry_toggles_its_column_and_closes_the_menu() {
     );
     let _ = app.update(Message::ParametersManagerColumn(Column::Type));
     assert!(
-        !app.tabs[tab].parameters_panel.columns[Column::Type.index()],
-        "choosing Type hides that column"
+        app.tabs[tab].parameters_panel.columns[Column::Type.index()],
+        "choosing Type shows that column"
     );
     assert!(
         !app.tabs[tab].parameters_panel.header_menu,
@@ -1573,8 +1608,30 @@ fn the_header_menu_opens_and_an_entry_toggles_its_column_and_closes_the_menu() {
     );
     let _ = app.update(Message::ParametersManagerColumn(Column::Type));
     assert!(
-        app.tabs[tab].parameters_panel.columns[Column::Type.index()],
-        "choosing it again brings the column back"
+        !app.tabs[tab].parameters_panel.columns[Column::Type.index()],
+        "choosing it again hides the column"
+    );
+    let _ = app.dispatch_command("BEDIT_DISCARD");
+}
+
+#[test]
+fn closing_the_manager_keeps_the_columns_that_were_shown() {
+    use crate::ui::window::parameters_manager::Column;
+    let (mut app, tab, _definition) = open(&["BPARAMETER POLAR 0,0 10,0 5,2"], &[]);
+    let _ = app.update(Message::ParametersManagerColumn(Column::Description));
+    assert!(
+        app.tabs[tab].parameters_panel.columns[Column::Description.index()],
+        "Description can be turned on"
+    );
+    let _ = app.dispatch_command("PARAMETERSCLOSE");
+    let _ = app.dispatch_command("BPARAMETERS");
+    assert!(
+        app.tabs[tab].parameters_panel.columns[Column::Description.index()],
+        "and the pane that opens again still shows it"
+    );
+    assert!(
+        !app.tabs[tab].parameters_panel.columns[Column::Type.index()],
+        "while Type stays hidden"
     );
     let _ = app.dispatch_command("BEDIT_DISCARD");
 }
