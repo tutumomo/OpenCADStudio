@@ -2,8 +2,8 @@
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <Product
     Id='*'
-    Name='Open CAD Studio'
-    UpgradeCode='bd6bceab-6c7a-4ce2-a62d-6ef06a92f8b1'
+    Name='Open CAD Studio.TW'
+    UpgradeCode='c6e11f5b-5af6-4bb0-9f25-c5c5e4a86bf5'
     Manufacturer='Hakan Seven'
     Language='1033'
     Codepage='1252'
@@ -28,28 +28,28 @@
 
     <Icon Id='AppIcon.ico' SourceFile='$(var.Icon)' />
     <Property Id='ARPPRODUCTICON' Value='AppIcon.ico' />
-    <Property Id='ARPHELPLINK' Value='https://github.com/HakanSeven12/OpenCADStudio' />
-    <Property Id='ARPURLINFOABOUT' Value='https://github.com/HakanSeven12/OpenCADStudio' />
-    <Property Id='ARPURLUPDATEINFO' Value='https://github.com/HakanSeven12/OpenCADStudio/releases' />
+    <Property Id='ARPHELPLINK' Value='https://github.com/tutumomo/OpenCADStudio' />
+    <Property Id='ARPURLINFOABOUT' Value='https://github.com/tutumomo/OpenCADStudio' />
+    <Property Id='ARPURLUPDATEINFO' Value='https://github.com/tutumomo/OpenCADStudio/releases' />
     <Property Id='ARPCONTACT' Value='Hakan Seven' />
     <Property Id='ARPCOMMENTS' Value='!(loc.ApplicationDescription)' />
     <Property Id='ARPNOREPAIR' Value='1' />
 
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFiles64Folder'>
-        <Directory Id='APPLICATIONROOTDIRECTORY' Name='Open CAD Studio'>
+        <Directory Id='APPLICATIONROOTDIRECTORY' Name='Open CAD Studio.TW'>
 
-          <Component Id='MainExecutable' Guid='2900c116-e9a5-4650-8a4c-48c0987d1a33' Win64='yes'>
+          <Component Id='MainExecutable' Guid='f8f24768-f7ed-4ffa-b559-d4b5b2946d00' Win64='yes'>
             <File
               Id='OpenCADStudioEXE'
-              Name='OpenCADStudio.exe'
+              Name='OpenCADStudio.TW.exe'
               DiskId='1'
               Source='$(var.Source)'
               KeyPath='yes'>
               <Shortcut
                 Id='StartMenuShortcut'
                 Directory='ProgramMenuDir'
-                Name='Open CAD Studio'
+                Name='Open CAD Studio.TW'
                 Description='!(loc.Launch)'
                 WorkingDirectory='APPLICATIONROOTDIRECTORY'
                 Icon='AppIcon.ico'
@@ -64,7 +64,7 @@
               DiskId='1'
               Source='$(var.ThumbDll)' />
             <ProgId
-              Id='OpenCADStudio.DWG'
+              Id='OpenCADStudio.TW.DWG'
               Description='!(loc.DwgDrawing)'
               Icon='DwgIco'
               IconIndex='0'>
@@ -74,7 +74,7 @@
             </ProgId>
 
             <ProgId
-              Id='OpenCADStudio.DXF'
+              Id='OpenCADStudio.TW.DXF'
               Description='!(loc.DxfDrawing)'
               Icon='DxfIco'
               IconIndex='0'>
@@ -83,78 +83,78 @@
               </Extension>
             </ProgId>
           </Component>
-          <Component Id='DefaultPrograms' Guid='6f3e9b2a-1c4d-4f8a-9b7e-2d5a8c1f0e63' Win64='yes'>
+          <Component Id='DefaultPrograms' Guid='76b1be19-5012-4395-a505-74603a55e978' Win64='yes'>
             <RegistryValue
               Root='HKLM'
-              Key='SOFTWARE\Classes\Applications\OpenCADStudio.exe\DefaultIcon'
+              Key='SOFTWARE\Classes\Applications\OpenCADStudio.TW.exe\DefaultIcon'
               Type='string'
-              Value='[APPLICATIONROOTDIRECTORY]OpenCADStudio.exe,0'
+              Value='[APPLICATIONROOTDIRECTORY]OpenCADStudio.TW.exe,0'
               KeyPath='yes' />
             <RegistryValue
               Root='HKLM'
-              Key='SOFTWARE\Classes\Applications\OpenCADStudio.exe'
+              Key='SOFTWARE\Classes\Applications\OpenCADStudio.TW.exe'
               Name='FriendlyAppName'
               Type='string'
-              Value='Open CAD Studio' />
+              Value='Open CAD Studio.TW' />
             <RegistryValue
               Root='HKLM'
-              Key='SOFTWARE\Classes\Applications\OpenCADStudio.exe\shell\open\command'
+              Key='SOFTWARE\Classes\Applications\OpenCADStudio.TW.exe\shell\open\command'
               Type='string'
-              Value='"[APPLICATIONROOTDIRECTORY]OpenCADStudio.exe" "%1"' />
+              Value='"[APPLICATIONROOTDIRECTORY]OpenCADStudio.TW.exe" "%1"' />
             <RegistryValue
               Root='HKLM'
-              Key='SOFTWARE\Classes\Applications\OpenCADStudio.exe\SupportedTypes'
+              Key='SOFTWARE\Classes\Applications\OpenCADStudio.TW.exe\SupportedTypes'
               Name='.dwg'
               Type='string'
               Value='' />
             <RegistryValue
               Root='HKLM'
-              Key='SOFTWARE\Classes\Applications\OpenCADStudio.exe\SupportedTypes'
+              Key='SOFTWARE\Classes\Applications\OpenCADStudio.TW.exe\SupportedTypes'
               Name='.dxf'
               Type='string'
               Value='' />
             <RegistryValue
               Root='HKLM'
-              Key='Software\Open CAD Studio\Capabilities'
+              Key='Software\Open CAD Studio.TW\Capabilities'
               Name='ApplicationName'
               Type='string'
-              Value='Open CAD Studio' />
+              Value='Open CAD Studio.TW' />
             <RegistryValue
               Root='HKLM'
-              Key='Software\Open CAD Studio\Capabilities'
+              Key='Software\Open CAD Studio.TW\Capabilities'
               Name='ApplicationDescription'
               Type='string'
               Value='!(loc.ApplicationDescription)' />
             <RegistryValue
               Root='HKLM'
-              Key='Software\Open CAD Studio\Capabilities\FileAssociations'
+              Key='Software\Open CAD Studio.TW\Capabilities\FileAssociations'
               Name='.dwg'
               Type='string'
-              Value='OpenCADStudio.DWG' />
+              Value='OpenCADStudio.TW.DWG' />
             <RegistryValue
               Root='HKLM'
-              Key='Software\Open CAD Studio\Capabilities\FileAssociations'
+              Key='Software\Open CAD Studio.TW\Capabilities\FileAssociations'
               Name='.dxf'
               Type='string'
-              Value='OpenCADStudio.DXF' />
+              Value='OpenCADStudio.TW.DXF' />
             <RegistryValue
               Root='HKLM'
               Key='Software\RegisteredApplications'
-              Name='Open CAD Studio'
+              Name='Open CAD Studio.TW'
               Type='string'
-              Value='Software\Open CAD Studio\Capabilities' />
+              Value='Software\Open CAD Studio.TW\Capabilities' />
           </Component>
 
         </Directory>
       </Directory>
 
       <Directory Id='ProgramMenuFolder'>
-        <Directory Id='ProgramMenuDir' Name='Open CAD Studio'>
-          <Component Id='ProgramMenuDirComp' Guid='34a788ba-f9d4-4e73-b1ff-9eb8749b369e'>
+        <Directory Id='ProgramMenuDir' Name='Open CAD Studio.TW'>
+          <Component Id='ProgramMenuDirComp' Guid='8c62f9cb-08b5-410c-82b9-7404bbea656b'>
             <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
             <RegistryValue
               Root='HKCU'
-              Key='Software\Open CAD Studio'
+              Key='Software\Open CAD Studio.TW'
               Name='installed'
               Type='integer'
               Value='1'
@@ -163,18 +163,18 @@
         </Directory>
       </Directory>
       <Directory Id='DesktopFolder' Name='!(loc.Desktop)'>
-        <Component Id='DesktopShortcutComp' Guid='c5c7f1c4-3d8a-4efd-b049-4662d9143dcd'>
+        <Component Id='DesktopShortcutComp' Guid='916a789d-8fe8-4cb9-a60d-5c52f3c37e75'>
           <Shortcut
             Id='DesktopShortcut'
-            Name='Open CAD Studio'
+            Name='Open CAD Studio.TW'
             Description='!(loc.Launch)'
-            Target='[APPLICATIONROOTDIRECTORY]OpenCADStudio.exe'
+            Target='[APPLICATIONROOTDIRECTORY]OpenCADStudio.TW.exe'
             WorkingDirectory='APPLICATIONROOTDIRECTORY'
             Icon='AppIcon.ico'
             IconIndex='0' />
           <RegistryValue
             Root='HKCU'
-            Key='Software\Open CAD Studio'
+            Key='Software\Open CAD Studio.TW'
             Name='desktop_shortcut'
             Type='integer'
             Value='1'
@@ -183,7 +183,7 @@
       </Directory>
     </Directory>
 
-    <Feature Id='Complete' Title='Open CAD Studio' Level='1' Display='expand'>
+    <Feature Id='Complete' Title='Open CAD Studio.TW' Level='1' Display='expand'>
       <ComponentRef Id='MainExecutable' />
       <ComponentRef Id='DefaultPrograms' />
       <ComponentRef Id='ProgramMenuDirComp' />

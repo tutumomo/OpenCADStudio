@@ -16,6 +16,8 @@
 
 ### 🐛 Bug Fixes
 
+* **Fork side-by-side install (Open CAD Studio.TW):** The fork's Windows installer now uses its own `UpgradeCode`, component GUIDs, install folder (`Open CAD Studio.TW`), Start Menu folder, ProgIDs and registry keys, so it coexists with the upstream build instead of being replaced by it. The update check and download link now follow this fork's releases.
+
 * **Big Font Code Page Detection:** Removed the heuristic that forced `ansi_936` (GBK) for big-font files containing `"china"` in their name. Big5 big-fonts like `china1.shx` and `chineset.shx` (which contain trail bytes `< 0xA1`) are now correctly identified as `ansi_950` (Big5) instead of producing mojibake in viewports and exports. Legacy shape-only `chinese.shx` files alias to `chineset.shx` when available.
 * **`ATTSYNC`:** A named block is synchronised directly instead of starting the interactive prompt; references rebuild from the definition in order, keep the values their tags carried, and a newly defined tag takes its default.
 * **Block Editor Parameter Sets:** A box or pair set abandoned before its action steps restores the definition it started from, so a rerun does not author a second parameter.
