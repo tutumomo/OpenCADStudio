@@ -34,8 +34,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/HakanSeven12/OpenCADStudio/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/HakanSeven12/OpenCADStudio"></a>
-  <a href="https://github.com/HakanSeven12/OpenCADStudio/releases"><img alt="Release downloads" src="https://img.shields.io/github/downloads/HakanSeven12/OpenCADStudio/total"></a>
+  <a href="https://github.com/tutumomo/OpenCADStudio/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/tutumomo/OpenCADStudio"></a>
+  <a href="https://github.com/tutumomo/OpenCADStudio/releases"><img alt="Release downloads" src="https://img.shields.io/github/downloads/tutumomo/OpenCADStudio/total"></a>
   <a href="https://github.com/HakanSeven12/OpenCADStudio/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/HakanSeven12/OpenCADStudio"></a>
   <a href="LICENSE"><img alt="GPL-3.0 license" src="https://img.shields.io/github/license/HakanSeven12/OpenCADStudio"></a>
 </p>
@@ -43,7 +43,7 @@
 <p align="center">
   <a href="https://www.opencadstudio.com"><strong>Launch the web app</strong></a>
   ·
-  <a href="https://github.com/HakanSeven12/OpenCADStudio/releases/latest"><strong>Download the desktop app</strong></a>
+  <a href="https://github.com/tutumomo/OpenCADStudio/releases/latest"><strong>Download the desktop app</strong></a>
   ·
   <a href="https://github.com/HakanSeven12/OpenCADStudio/discussions"><strong>Join the discussion</strong></a>
 </p>
@@ -103,7 +103,7 @@ Use the desktop application for native file associations, file-manager thumbnail
 
 ## Install
 
-Download the package for your computer from the [download page](https://www.opencadstudio.com/download/); every link there is the latest release. All files are also on the [latest release](https://github.com/HakanSeven12/OpenCADStudio/releases/latest) page.
+Download the package for your computer from the [latest release](https://github.com/tutumomo/OpenCADStudio/releases/latest) page of this fork.
 
 ### Windows
 
@@ -264,7 +264,7 @@ and `cargo test --lib i18n::tests`.
 
 ### Release downloads
 
-<a href="https://github.com/HakanSeven12/OpenCADStudio/releases">
+<a href="https://github.com/tutumomo/OpenCADStudio/releases">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://www.opencadstudio.com/download-history-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="https://www.opencadstudio.com/download-history-light.svg">
