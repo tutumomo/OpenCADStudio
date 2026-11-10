@@ -16,6 +16,8 @@ concurrency:
 
 jobs:
   publish:
+    # fork 沒有 Wiki 內容，clone 會失敗；只在上游重建 Wiki。
+    if: github.repository == 'HakanSeven12/OpenCADStudio'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

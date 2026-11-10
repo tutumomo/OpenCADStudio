@@ -32,6 +32,8 @@ concurrency:
 
 jobs:
   build:
+    # 只在上游部署網頁版；fork 沒有開 Pages，也不需要網頁版。
+    if: github.repository == 'HakanSeven12/OpenCADStudio'
     runs-on: ubuntu-22.04
     outputs:
       tag: ${{ steps.source.outputs.tag }}
